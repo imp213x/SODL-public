@@ -60,8 +60,8 @@ test = [
 ]
 
 [project.urls]
-Repository = "https://github.com/imp213x/SODL"
-Documentation = "https://github.com/imp213x/SODL/tree/main/python/docs"
+Repository = "https://github.com/imp213x/SODL-public"
+Documentation = "https://github.com/imp213x/SODL-public/tree/main/python/docs"
 
 [project.scripts]
 sodl = "sodl.cli:main"

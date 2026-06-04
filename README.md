@@ -182,6 +182,15 @@ Health check:
 curl http://127.0.0.1:7700/health
 ```
 
+Run with Docker:
+
+```bash
+docker build -t sodl-server:local .
+docker run --rm -p 7700:7700 -v sodl-data:/data sodl-server:local
+```
+
+The container listens on `0.0.0.0:7700`, stores blobs in `/data/blobs`, stores SQLite metadata at `/data/sodl.db`, and exposes `/health` for orchestration health checks. Production deployments should mount `/data` on durable storage and set `SODL_MASTER_KEY` through a secret manager.
+
 Upload bytes:
 
 ```bash

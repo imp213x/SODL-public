@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 license = "Apache-2.0"
 description = "SODL lineage proof generation (unsigned digest)"
-repository = "https://github.com/imp213x/SODL"
+repository = "https://github.com/imp213x/SODL-public"
 
 [dependencies]
 sodl-core = { path = "../sodl-core" }

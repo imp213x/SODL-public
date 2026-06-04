@@ -1,6 +1,6 @@
 site_name: SODL Python SDK
 site_description: Content-addressed, lineage-aware data framework for AI systems
-repo_url: https://github.com/imp213x/SODL
+repo_url: https://github.com/imp213x/SODL-public
 
 theme:
   name: material
