@@ -1,0 +1,16 @@
+[package]
+name = "sodl-dist"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+sodl-core = { path = "../sodl-core" }
+sodl-fetch = { path = "../sodl-fetch" }
+bytes.workspace = true
+reqwest = { workspace = true, features = ["blocking"] }
+tracing.workspace = true
+
+[features]
+default = []

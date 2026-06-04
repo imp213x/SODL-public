@@ -1,0 +1,11 @@
+[package]
+name = "sodl-polar-quant"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+description = "Polar-coordinate weight quantization for SODL (inspired by TurboQuant)"
+
+[dependencies]
+thiserror.workspace = true

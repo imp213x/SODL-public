@@ -1,0 +1,19 @@
+[package]
+name = "sodl-chunk"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Content-defined chunking for SODL — dedup, streaming, and large-file support"
+
+[dependencies]
+sodl-core  = { path = "../sodl-core" }
+sodl-cas   = { path = "../sodl-cas" }
+
+bytes.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+once_cell.workspace = true
+
+[dev-dependencies]
+rand = "0.8"

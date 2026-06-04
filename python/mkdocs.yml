@@ -1,0 +1,17 @@
+site_name: SODL Python SDK
+site_description: Content-addressed, lineage-aware data framework for AI systems
+repo_url: https://github.com/imp213x/SODL
+
+theme:
+  name: material
+
+nav:
+  - Home: docs/index.md
+  - Getting Started: docs/getting-started.md
+  - Training Acceleration: docs/training-acceleration.md
+  - Model Lifecycle: docs/model-lifecycle.md
+  - Security: docs/security.md
+  - API Reference:
+      - Overview: docs/api-reference/index.md
+      - Core Storage: docs/api-reference/core-storage.md
+      - Training: docs/api-reference/training.md

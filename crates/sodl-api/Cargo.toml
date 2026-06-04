@@ -1,0 +1,47 @@
+[package]
+name = "sodl-api"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "HTTP REST API for SODL — embeddable library + standalone server"
+
+[lib]
+name = "sodl_api"
+path = "src/lib.rs"
+
+[[bin]]
+name = "sodl-server"
+path = "src/main.rs"
+
+[dependencies]
+sodl-core     = { path = "../sodl-core" }
+sodl-cas      = { path = "../sodl-cas" }
+sodl-crypto   = { path = "../sodl-crypto", features = ["aead"] }
+sodl-origin   = { path = "../sodl-origin" }
+sodl-manifest = { path = "../sodl-manifest" }
+sodl-policy   = { path = "../sodl-policy" }
+sodl-store    = { path = "../sodl-store", features = ["aead"] }
+sodl-index    = { path = "../sodl-index" }
+sodl-service  = { path = "../sodl-service" }
+sodl-persist  = { path = "../sodl-persist" }
+sodl-proof    = { path = "../sodl-proof" }
+sodl-chunk    = { path = "../sodl-chunk" }
+
+axum      = { version = "0.8", features = ["multipart"] }
+tokio     = { version = "1", features = ["rt-multi-thread", "macros", "signal"] }
+serde.workspace     = true
+serde_json.workspace = true
+bytes.workspace      = true
+uuid.workspace       = true
+time.workspace       = true
+tracing.workspace    = true
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+tower-http = { version = "0.6", features = ["cors", "trace"] }
+
+[features]
+default = []
+
+[dev-dependencies]
+http-body-util = "0.1"
+tower = { version = "0.5", features = ["util"] }

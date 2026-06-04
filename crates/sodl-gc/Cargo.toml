@@ -1,0 +1,21 @@
+[package]
+name = "sodl-gc"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+sodl-core = { path = "../sodl-core" }
+sodl-cas = { path = "../sodl-cas" }
+sodl-origin = { path = "../sodl-origin" }
+sodl-policy = { path = "../sodl-policy" }
+sodl-index = { path = "../sodl-index" }
+sodl-replica = { path = "../sodl-replica" }
+
+serde.workspace = true
+time.workspace = true
+uuid.workspace = true
+
+[features]
+default = []

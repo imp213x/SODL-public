@@ -1,0 +1,16 @@
+[package]
+name = "sodl-replica"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+sodl-core = { path = "../sodl-core" }
+sodl-cas = { path = "../sodl-cas" }
+bytes.workspace = true
+serde.workspace = true
+time.workspace = true
+
+[features]
+default = []

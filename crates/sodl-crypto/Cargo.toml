@@ -1,0 +1,23 @@
+[package]
+name = "sodl-crypto"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+sodl-core = { path = "../sodl-core" }
+serde.workspace = true
+thiserror.workspace = true
+bytes.workspace = true
+
+# Optional real-crypto deps (enabled by `aead` feature)
+chacha20poly1305 = { workspace = true, optional = true }
+hkdf = { workspace = true, optional = true }
+hmac = { workspace = true, optional = true }
+sha2 = { workspace = true, optional = true }
+blake3 = { workspace = true, optional = true }
+
+[features]
+default = []
+aead = ["dep:chacha20poly1305", "dep:hkdf", "dep:hmac", "dep:sha2", "dep:blake3"]

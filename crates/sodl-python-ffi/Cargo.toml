@@ -1,0 +1,28 @@
+[package]
+name = "sodl-python-ffi"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[lib]
+name = "sodl_native"
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+sodl-cas = { path = "../sodl-cas" }
+sodl-dist = { path = "../sodl-dist" }
+sodl-fetch = { path = "../sodl-fetch" }
+sodl-replica = { path = "../sodl-replica" }
+sodl-core = { path = "../sodl-core" }
+sodl-crypto = { path = "../sodl-crypto", features = ["aead"] }
+sodl-service = { path = "../sodl-service" }
+bytes.workspace = true
+pyo3.workspace = true
+serde_json.workspace = true
+time.workspace = true
+uuid.workspace = true
+zstd.workspace = true
+
+[dev-dependencies]
+tempfile = "3"

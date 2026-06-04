@@ -1,0 +1,21 @@
+[package]
+name = "sodl-store"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+sodl-core = { path = "../sodl-core" }
+sodl-cas = { path = "../sodl-cas" }
+sodl-policy = { path = "../sodl-policy" }
+sodl-crypto = { path = "../sodl-crypto" }
+bytes.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+time.workspace = true
+zstd.workspace = true
+
+[features]
+default = []
+aead = ["sodl-crypto/aead"]
