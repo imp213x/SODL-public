@@ -10,7 +10,7 @@ It also asks the practical infrastructure question behind that:
 
 > Why should 100 users sharing, downloading, and re-uploading the same 50 MB file create 5 GB of storage debt inside the same application?
 
-SODL combines content-addressed storage, origin records, lineage, policy-aware retention, deduplication, chunking, encryption boundaries, and integration APIs. The goal is to make file and artifact management portable across web apps, AI training systems, local tools, and distributed services.
+SODL combines content-addressed storage, origin records, lineage, policy-aware retention, deduplication signals, chunking, encryption boundaries, and integration APIs. The goal is to make file and artifact management portable across web apps, AI training systems, local tools, and distributed services.
 
 SODL was created by SoftQraft Labs Ltd and is released as open source under Apache-2.0.
 
@@ -47,7 +47,33 @@ SODL separates those concerns:
 - the byte payload can still resolve to the same content identity or provenance family,
 - storage growth follows unique content and meaningful mutations, not repeated user behavior.
 
-The result is less storage debt, cleaner provenance, and safer reuse.
+The result is less storage debt, cleaner provenance, and safer reuse when the integrating application uses those signals in its own storage policy.
+
+## Boundary: What SODL Owns Vs What Your App Owns
+
+SODL is an engine, not a replacement for your product's authorization, billing, quota, or UI model.
+
+SODL owns:
+
+- content identity: blob IDs, payload fingerprints, and chunk fingerprints,
+- origin records and representation metadata,
+- exact and overlap provenance resolution,
+- encrypted blob storage inside the SODL runtime boundary,
+- lineage, share, derivation, policy, retention, and future proof primitives,
+- reuse evidence: "this payload appears to be the same as, derived from, or overlapping with origin X."
+
+The integrating application owns:
+
+- user, workspace, tenant, and role authorization,
+- whether a caller may reuse, read, share, or attach an existing origin,
+- upload limits, user quota, billing, moderation, malware scanning, and abuse controls,
+- product records such as books, posts, messages, articles, campaigns, datasets, or model runs,
+- whether to skip its own object-store write when SODL reports a safe exact match,
+- app-level read URLs, CDN behavior, audit views, and deletion workflows.
+
+That distinction is deliberate. SODL can tell an app that two uploads have the same payload identity or lineage family. The app must still decide whether it is safe and desirable to reuse a physical object, create a separate ownership record, grant access, or bill quota differently.
+
+For example, in The Scholar, SODL identifies the same uploaded PDF by checksum, origin, and blob identity. The Scholar then applies its own library policy: User B gets a separate book/object record, but the app reuses User A's physical storage object instead of writing duplicate bytes. That storage-reuse policy is The Scholar's integration logic, backed by SODL evidence.
 
 ## What SODL Provides
 
@@ -56,7 +82,7 @@ SODL is a Rust workspace with an HTTP service, a Python SDK, and foundations for
 Core capabilities:
 
 - Content-addressed storage with Blake3 identities.
-- Exact byte deduplication.
+- Exact byte identity and deduplication inside the SODL storage boundary.
 - Chunked storage for large objects.
 - Chunk-overlap provenance for cuts and partial re-uploads.
 - Origin records with owner, media kind, durability, and representation metadata.
@@ -215,19 +241,20 @@ curl http://127.0.0.1:7700/v1/origins/<origin-id>/payload --output restored.bin
 
 ## App Integration Pattern
 
-A production app should treat SODL as the system of record for file provenance, not necessarily as the only byte-serving layer.
+A production app should treat SODL as the system of record for file provenance, not necessarily as the only byte-serving layer or the only policy engine.
 
 Recommended flow:
 
 1. App receives an upload.
 2. App validates file type, size, actor, and quota.
 3. App asks SODL to resolve provenance for the bytes.
-4. App stores or mirrors bytes through SODL.
-5. App stores its own business record with the SODL origin/object ID.
-6. App serves files through its normal authorization layer.
-7. App can use SODL payload readback or legacy object storage fallback during migration.
+4. App decides, under its own authorization/quota/storage policy, whether to reuse an existing physical object or write a new one.
+5. App stores or mirrors bytes through SODL when needed.
+6. App stores its own business record with the SODL origin/object ID.
+7. App serves files through its normal authorization layer.
+8. App can use SODL payload readback or legacy object storage fallback during migration.
 
-This lets an app keep its product-specific rules while SODL owns origin identity, dedupe, lineage, and storage lifecycle.
+This lets an app keep its product-specific rules while SODL owns origin identity, provenance, lineage, and storage-lifecycle primitives. SODL enables app-level storage reuse; it does not automatically override the application's physical storage, tenant isolation, or billing decisions.
 
 ## AI Integration Pattern
 

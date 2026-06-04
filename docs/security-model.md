@@ -13,6 +13,8 @@ SODL has four main boundaries:
 
 The calling application is expected to authenticate users and decide whether an actor may upload, read, share, derive, or delete a file. SODL provides storage, provenance, lineage, and policy primitives; it does not replace product authorization by itself.
 
+This boundary also applies to deduplication and reuse. SODL can identify that bytes, chunks, or derived artifacts match existing origins. The calling application decides whether that evidence is allowed to affect product storage, quota, billing, access, or UI state.
+
 ## Assets
 
 Important assets include:
@@ -77,6 +79,15 @@ SODL provenance is intended to answer:
 - what derivation or share records exist.
 
 Provenance candidates are evidence, not authorization. An application must not grant read access to a candidate origin merely because bytes overlap. It must still check actor permissions.
+
+Similarly, a provenance match is not an automatic instruction to reuse the application's own physical storage object. Reuse is safe only after the application checks its tenant, visibility, retention, scan, and business-policy rules.
+
+Recommended integration posture:
+
+- exact payload match: eligible for app-level physical-storage reuse if the app policy allows it,
+- chunk overlap: evidence for lineage or review, not automatic reuse,
+- derivation match: evidence for parent-child provenance, not automatic read access,
+- cross-tenant match: never grant access without explicit app authorization.
 
 ## Encryption Boundary
 
