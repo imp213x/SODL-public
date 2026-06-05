@@ -2,16 +2,18 @@
 
 use std::sync::Arc;
 
+use axum::extract::DefaultBodyLimit;
 use axum::routing::{delete, get, post};
 use axum::Router;
 use tower_http::cors::CorsLayer;
 use tower_http::trace::TraceLayer;
 
 use crate::handlers;
+use crate::config::Config;
 use crate::state::AppState;
 
 /// Build the full application router.
-pub fn build(state: Arc<AppState>) -> Router {
+pub fn build_with_config(state: Arc<AppState>, config: &Config) -> Router {
     Router::new()
         // Health
         .route("/health", get(handlers::health))
@@ -49,8 +51,14 @@ pub fn build(state: Arc<AppState>) -> Router {
         .route("/v1/pins", post(handlers::create_pin))
         .route("/v1/pins/{id}", delete(handlers::release_pin))
         // Middleware
+        .layer(DefaultBodyLimit::max(config.max_upload_bytes))
         .layer(TraceLayer::new_for_http())
         .layer(CorsLayer::permissive())
         // State
         .with_state(state)
+}
+
+/// Build the full application router with default environment configuration.
+pub fn build(state: Arc<AppState>) -> Router {
+    build_with_config(state, &Config::from_env())
 }

@@ -309,6 +309,7 @@ SODL is designed to run as a private service behind an application boundary. Do 
 For production:
 
 - Set `SODL_MASTER_KEY`.
+- Set `SODL_MAX_UPLOAD_BYTES` to the largest multipart body your application intentionally allows. The default is `1073741824` bytes.
 - Use a managed secret store.
 - Keep `SODL_BLOB_DIR` and `SODL_DB_PATH` outside the source checkout.
 - Back up both runtime paths.

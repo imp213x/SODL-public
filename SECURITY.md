@@ -48,6 +48,7 @@ For production deployments:
 - Restrict file permissions on runtime storage.
 - Bind SODL to localhost or a private network.
 - Enforce upload size, type, and quota limits at the application or gateway layer.
+- Set `SODL_MAX_UPLOAD_BYTES` to match the largest multipart body the application intentionally allows.
 - Monitor disk usage and configure garbage-collection operations before high-volume use.
 - Use TLS for any network path that leaves localhost or a trusted private network.
 - Log operational events without logging raw secrets or plaintext payloads.

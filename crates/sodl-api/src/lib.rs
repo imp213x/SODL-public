@@ -59,6 +59,8 @@ pub mod handlers;
 pub mod router;
 pub mod state;
 
+use config::Config;
+
 pub use state::{AppState, SodlServerBuilder};
 
 /// Build an axum router with all SODL endpoints.
@@ -67,7 +69,7 @@ pub use state::{AppState, SodlServerBuilder};
 /// Pass the result to `axum::serve` or nest it under a prefix in your own
 /// router.
 pub fn build_router(state: AppState) -> axum::Router {
-    router::build(std::sync::Arc::new(state))
+    router::build_with_config(std::sync::Arc::new(state), &Config::from_env())
 }
 
 #[cfg(test)]

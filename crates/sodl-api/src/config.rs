@@ -15,6 +15,8 @@ pub struct Config {
     pub blob_dir: PathBuf,
     /// SQLite database path (default `./sodl_data/sodl.db`).
     pub db_path: PathBuf,
+    /// Maximum accepted multipart upload/provenance body size in bytes.
+    pub max_upload_bytes: usize,
     /// Encryption mode.
     pub encryption: EncryptionMode,
 }
@@ -39,6 +41,7 @@ impl Config {
     /// | `SODL_LISTEN`         | `127.0.0.1:7700`         | Listen address                        |
     /// | `SODL_BLOB_DIR`       | `./sodl_data/blobs`      | Blob storage root                     |
     /// | `SODL_DB_PATH`        | `./sodl_data/sodl.db`    | SQLite path                           |
+    /// | `SODL_MAX_UPLOAD_BYTES` | `1073741824`            | Max multipart request body bytes      |
     /// | `SODL_MASTER_KEY`     | *(unset = NullCrypto)*   | 64-hex-char master key for AEAD       |
     pub fn from_env() -> Self {
         let listen: SocketAddr = std::env::var("SODL_LISTEN")
@@ -54,6 +57,12 @@ impl Config {
             std::env::var("SODL_DB_PATH").unwrap_or_else(|_| "./sodl_data/sodl.db".into()),
         );
 
+        let max_upload_bytes = std::env::var("SODL_MAX_UPLOAD_BYTES")
+            .ok()
+            .and_then(|value| value.parse::<usize>().ok())
+            .filter(|value| *value > 0)
+            .unwrap_or(1024 * 1024 * 1024);
+
         let encryption = match std::env::var("SODL_MASTER_KEY") {
             Ok(hex) if !hex.is_empty() => EncryptionMode::Aead {
                 master_key_hex: hex,
@@ -65,6 +74,7 @@ impl Config {
             listen,
             blob_dir,
             db_path,
+            max_upload_bytes,
             encryption,
         }
     }

@@ -4,7 +4,7 @@ build-backend = "maturin"
 
 [project]
 name = "sodl-native"
-version = "0.1.0"
+version = "0.1.1"
 description = "Rust pyo3 bridge for SODL blob and compression primitives"
 requires-python = ">=3.10"
 

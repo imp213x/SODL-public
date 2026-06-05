@@ -33,6 +33,7 @@ async fn main() {
         listen = %config.listen,
         blob_dir = %config.blob_dir.display(),
         db_path = %config.db_path.display(),
+        max_upload_bytes = config.max_upload_bytes,
         "starting SODL server"
     );
 
@@ -43,7 +44,7 @@ async fn main() {
             .expect("failed to build SODL state"),
     );
 
-    let app = sodl_api::router::build(state);
+    let app = sodl_api::router::build_with_config(state, &config);
 
     let listener = tokio::net::TcpListener::bind(&config.listen)
         .await
