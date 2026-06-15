@@ -20,7 +20,7 @@ from typing import Optional, Sequence
 
 import blake3
 
-from sodl_weights.store import BlobStore, compute_blob_id
+from sodl_weights.store import BlobStore, canonical_blob_id, compute_blob_id
 from sodl_weights.registry import NodeRegistry, NodeInfo
 
 logger = logging.getLogger(__name__)
@@ -156,12 +156,12 @@ class ConsistencyChecker:
         list of str
             Orphaned blob file paths.
         """
+        known = {canonical_blob_id(blob_id) for blob_id in known_blob_ids if str(blob_id).strip()}
         orphaned = []
         root = self._store._root
         for blob_file in root.glob("*.blob"):
-            hex_hash = blob_file.stem
-            blob_id = f"blake3:{hex_hash}"
-            if blob_id not in known_blob_ids:
+            blob_id = canonical_blob_id(blob_file.name)
+            if blob_id not in known:
                 orphaned.append(blob_id)
         return orphaned
 

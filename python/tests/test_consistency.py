@@ -80,6 +80,17 @@ class TestConsistencyChecker:
         orphaned = checker.find_orphaned({bid})
         assert len(orphaned) == 0
 
+    def test_find_orphaned_normalizes_blob_suffix_and_raw_hash(self, checker_setup):
+        checker, store, _ = checker_setup
+        data = b"live blob protected by index"
+        bid = compute_blob_id(data)
+        store.put(bid, data)
+
+        raw_hash = bid.split(":", 1)[1]
+
+        assert checker.find_orphaned({raw_hash}) == []
+        assert checker.find_orphaned({f"{raw_hash}.blob"}) == []
+
     def test_repair_blob(self, checker_setup):
         checker, store, _ = checker_setup
         data = b"repair test"

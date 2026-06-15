@@ -39,6 +39,22 @@ class SodlNotFoundError(Exception):
     """Raised when a blob is not found in the store."""
 
 
+def canonical_blob_id(value: str | Path) -> str:
+    """Normalize a blob id or ``.blob`` filename to ``blake3:<hex>``.
+
+    SODL indexes store logical blob ids while filesystem stores use
+    ``<hex>.blob`` files. Any pruning or consistency scan must compare the
+    logical id, not the literal filename, to avoid deleting live blobs.
+    """
+    raw = str(value).strip()
+    name = raw.replace("\\", "/").rsplit("/", 1)[-1]
+    if name.endswith(".blob"):
+        name = name[: -len(".blob")]
+    if ":" in name:
+        return name
+    return f"blake3:{name}"
+
+
 class BlobStore:
     """On-disk content-addressed blob store.
 
@@ -67,12 +83,12 @@ class BlobStore:
 
     def _path(self, blob_id: str) -> Path:
         # blob_id is "blake3:<hex>" — use the hex part as the filename
-        _, hex_hash = blob_id.split(":", 1) if ":" in blob_id else ("", blob_id)
+        _, hex_hash = canonical_blob_id(blob_id).split(":", 1)
         return self._root / f"{hex_hash}.blob"
 
     @staticmethod
     def _path_for_root(root: Path, blob_id: str) -> Path:
-        _, hex_hash = blob_id.split(":", 1) if ":" in blob_id else ("", blob_id)
+        _, hex_hash = canonical_blob_id(blob_id).split(":", 1)
         return root / f"{hex_hash}.blob"
 
     def _source_path(self, source_root: Path, blob_id: str) -> Path:
